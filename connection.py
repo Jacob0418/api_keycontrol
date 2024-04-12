@@ -170,6 +170,20 @@ def get_student_by_id(id):
             return jsonify({"error": "Estudiante no encontrado"}), 404
     else:
         return jsonify({"error": "Error de conexión"}), 500
+    
+# INNER JOIN ESTUDIANTES Y GRUPOS
+@app.route('/usuario', methods=['GET'])
+def get_relation_students_groups():
+    connection = create_db_connection()
+    if connection:
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute("SELECT st.nombre, gp.grupo, cl.salon FROM students st INNER JOIN groups gp ON gp.id = st.grupo_id INNER JOIN classroom cl ON cl.id = st.grupo_id")
+        estudiantes_grupos = cursor.fetchall()
+        cursor.close()
+        connection.close()
+        return jsonify(estudiantes_grupos)
+    else:
+        return jsonify({"error": "Error de conexión"}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
