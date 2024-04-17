@@ -199,4 +199,4 @@ def get_relation_students_groups_by_id(id):
         return jsonify({"error": "Error de conexión"}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)
