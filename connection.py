@@ -198,5 +198,31 @@ def get_relation_students_groups_by_id(id):
     else:
         return jsonify({"error": "Error de conexión"}), 500
 
+@app.route('/acceso', methods=['GET'])
+def get_acces_control():
+    connection = create_db_connection()
+    if connection:
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM access_control")
+        acceso = cursor.fetchall()
+        cursor.close()
+        connection.close()
+        return jsonify(acceso)
+    else:
+        return jsonify({"error: Error de conexión"}), 500
+    
+@app.route('/accesolim', methods=['GET'])
+def get_acces_control_lim():
+    connection = create_db_connection()
+    if connection:
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM access_control")
+        acceso = cursor.fetchall()
+        cursor.close()
+        connection.close()
+        return jsonify(acceso)
+    else:
+        return jsonify({"error: Error de conexión"}), 500
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

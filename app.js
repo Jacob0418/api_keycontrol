@@ -103,6 +103,23 @@ app.get('/usuarios/:id', async (req, res) => {
 }
 );
 
+app.get('/acceso', async (req, res) => {
+    const connection = createDbConnection();
+    connection.query("SELECT st.nombre, gp.grupo, cl.salon, u.uid, DATE_FORMAT(ac.date, '%Y-%m-%d') AS fecha FROM students st INNER JOIN groups gp ON st.grupo_id = gp.id INNER JOIN classroom cl ON cl.id = gp.id INNER JOIN cards u ON u.id = st.id INNER JOIN access_control ac ON ac.information = u.uid;", (error, results)=>{
+        if (error) throw error;
+        res.json(results);
+        connection.end();
+    });   
+});
+app.get('/accesolim', async (req, res) => {
+    const connection = createDbConnection();
+    connection.query("SELECT st.nombre, gp.grupo, cl.salon, u.uid, DATE_FORMAT(ac.date, '%Y-%m-%d') AS fecha FROM students st INNER JOIN groups gp ON st.grupo_id = gp.id INNER JOIN classroom cl ON cl.id = gp.id INNER JOIN cards u ON u.id = st.id INNER JOIN access_control ac ON ac.information = u.uid ORDER BY ac.date DESC LIMIT 1;    ", (error, results)=>{
+        if (error) throw error;
+        res.json(results);
+        connection.end();
+    });   
+});
+
     
 
 
@@ -110,7 +127,9 @@ app.get('/usuarios/:id', async (req, res) => {
 // Define otras rutas de manera similar a las anteriores.
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, '10.10.51.27', () => {
-    console.log(`Server running on http://10.10.51.27:${PORT}`);
+const HOST = '192.168.100.11';
+
+app.listen(PORT, HOST, () => {
+    console.log(`Server running on http://${HOST}:${PORT}`);
 });
 
