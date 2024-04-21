@@ -127,7 +127,7 @@ app.get('/accesolim', async (req, res) => {
 // Define otras rutas de manera similar a las anteriores.
 
 const PORT = process.env.PORT || 5000;
-const HOST = '192.168.100.11';
+const HOST = '192.168.16.121';
 
 app.listen(PORT, HOST, () => {
     console.log(`Server running on http://${HOST}:${PORT}`);

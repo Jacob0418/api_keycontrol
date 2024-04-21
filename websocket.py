@@ -34,7 +34,8 @@ async def leer_tarjeta(ser, cursor, connection):
                 cursor.execute(insert_query, [uid])
                 connection.commit()  # Hacer commit para guardar los cambios en la base de datos
 
-                ser.write(b'N\n')  # Enviar comando 'N' al dispositivo a través del puerto serial
+                # Enviar comando 'N' al Arduino a través del puerto serial para abrir la puerta
+                ser.write(b'N\n')
             else:
                 mensaje = f"El UID {uid} no existe en la base de datos."
                 await enviar_a_todos(mensaje)
@@ -46,7 +47,9 @@ clientes_conectados = set()
 async def handler(websocket, path):
     clientes_conectados.add(websocket)
     try:
-        await websocket.wait_closed()
+        async for message in websocket:  # Escuchar mensajes del cliente
+            # Aquí puedes agregar la lógica para manejar diferentes comandos recibidos desde la aplicación móvil
+            pass
     finally:
         clientes_conectados.remove(websocket)
 
@@ -58,7 +61,7 @@ async def enviar_a_todos(mensaje):
 # Función principal
 async def main():
     connection, cursor = create_db_connection()
-    ser = serial.Serial('COM7', 9600)
+    ser = serial.Serial('COM7', 9600)  # Ajusta el puerto y la velocidad según tu configuración
     await asyncio.gather(
         websockets.serve(handler, "localhost", 6789),
         leer_tarjeta(ser, cursor, connection)  # Pasar la conexión como argumento adicional
